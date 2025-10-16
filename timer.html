@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chronomètre & Timer</title>
+    <link rel="stylesheet" href="assets/css/timer.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="assets/manifest/site.webmanifest">
+</head>
+
+<body>
+    <div class="container">
+        <h1>⏱️ CHRONOMÈTRE & TIMER</h1>
+        
+        <!-- Section Chronomètre -->
+        <div class="section">
+            <h2>CHRONOMÈTRE</h2>
+            <div class="display" id="chronoDisplay">00:00:00</div>
+            <div class="controls">
+                <button id="startChrono">Démarrer</button>
+                <button id="stopChrono">Stop</button>
+                <button id="resetChrono">Reset</button>
+            </div>
+        </div>
+
+        <!-- Section Timer -->
+        <div class="section">
+            <h2>TIMER</h2>
+            <div class="timer-controls">
+                <button class="timer-btn" data-minutes="5">5 min</button>
+                <button class="timer-btn" data-minutes="10">10 min</button>
+                <button class="timer-btn" data-minutes="15">15 min</button>
+                <button class="timer-btn alf-btn" data-minutes="30">
+                    <span>Alf</span>
+                </button>
+                <button class="timer-btn" data-minutes="60">1h</button>
+            </div>
+            
+            <!-- Image Alf au-dessus du timer personnalisé -->
+            <div class="alf-container">
+                <img src="assets/images/alf.png" alt="Alf" class="alf-image">
+            </div>
+            
+            <div class="timer-controls">
+                <div class="custom-timer">
+                    <input type="number" id="customMinutes" placeholder="Min" min="1" max="777">
+                    <button id="setCustomTimer">Valider</button>
+                </div>
+            </div>
+            
+            <div class="display" id="timerDisplay">00:00:00</div>
+            <div class="timer-controls">
+                <button id="startTimer">Démarrer</button>
+                <button id="stopTimer">Stop</button>
+                <button id="resetTimer">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/timer.js"></script>
+</body>
+</html>

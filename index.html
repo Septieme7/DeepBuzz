@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hells 👎 or not 👍...</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="assets/manifest/site.webmanifest">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🎵 SOUNDBOARD OF THE LIFE 👍 OU PAS 👎</h1>
+            <div class="header-buttons">
+                <button id="volumeDown" class="volume-btn" title="Baisser le volume">🔉</button>
+                <div class="volume-display" id="volumeDisplay">77%</div>
+                <button id="volumeUp" class="volume-btn" title="Monter le volume">🔊</button>
+                <button id="fullscreenBtn" class="fullscreen-btn" title="Plein écran">⛶</button>
+                <button id="timerBtn" class="timer-btn" title="Chronomètre/Timer">⏱️</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="soundboard-grid" id="soundboard">
+            <!-- Les boutons de sons seront générés par JavaScript -->
+        </div>
+    </main>
+
+    <!-- Modal pour renommer les sons -->
+    <div id="renameModal" class="modal">
+        <div class="modal-content">
+            <h3>RENOMMER LE SON</h3>
+            <input type="text" id="renameInput" placeholder="Nouveau nom">
+            <div class="modal-buttons">
+                <button id="confirmRename">OK</button>
+                <button id="cancelRename">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
