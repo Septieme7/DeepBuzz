@@ -75,30 +75,33 @@ header::after {
 .header-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 1rem;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    flex-wrap: wrap;
     gap: 1rem;
 }
 
 .header-content h1 {
-    font-size: 1.8rem;
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
     text-transform: uppercase;
     letter-spacing: 2px;
     text-shadow: 
         0 0 10px #ff6600,
         0 0 20px #ff6600,
         0 0 30px #ff3300;
+    text-align: center;
 }
 
 .header-buttons {
     display: flex;
-    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
 }
 
-.theme-btn, .fullscreen-btn, .timer-btn, .volume-btn {
+.theme-btn, .fullscreen-btn, .timer-btn, .volume-btn, .random-btn {
     background: linear-gradient(145deg, #1a0000, #330000);
     border: 2px solid #ff6600;
     color: #ffaa00;
@@ -115,7 +118,7 @@ header::after {
     overflow: hidden;
 }
 
-.theme-btn::before, .fullscreen-btn::before, .timer-btn::before, .volume-btn::before {
+.theme-btn::before, .fullscreen-btn::before, .timer-btn::before, .volume-btn::before, .random-btn::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -128,12 +131,12 @@ header::after {
     transition: width 0.6s, height 0.6s;
 }
 
-.theme-btn:hover::before, .fullscreen-btn:hover::before, .timer-btn:hover::before, .volume-btn:hover::before {
+.theme-btn:hover::before, .fullscreen-btn:hover::before, .timer-btn:hover::before, .volume-btn:hover::before, .random-btn:hover::before {
     width: 200px;
     height: 200px;
 }
 
-.theme-btn:hover, .fullscreen-btn:hover, .timer-btn:hover, .volume-btn:hover {
+.theme-btn:hover, .fullscreen-btn:hover, .timer-btn:hover, .volume-btn:hover, .random-btn:hover {
     border-color: #ff0000;
     color: #ff0000;
     transform: scale(1.15) rotate(5deg);
@@ -146,11 +149,11 @@ header::after {
     background: linear-gradient(145deg, #1a0000, #330000);
     border: 2px solid #ff6600;
     color: #ffaa00;
-    padding: 0.4rem 0.8rem !important;
+    padding: 0.4rem 0.8rem;
     border-radius: 25px;
     font-size: 1rem;
     font-weight: bold;
-    min-width: 65px !important;
+    min-width: 65px;
     text-align: center;
     box-shadow: 
         0 0 15px rgba(255, 102, 0, 0.3),
@@ -166,23 +169,23 @@ header::after {
 }
 
 .volume-display[data-volume="100"] {
-    font-size: 0.85rem !important;
-    padding: 0.4rem 0.8rem !important;
-    min-width: 60px !important;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    min-width: 60px;
 }
 
 main {
     max-width: 1200px;
     margin: 2rem auto;
-    padding: 0 2rem;
+    padding: 0 1rem;
     position: relative;
     z-index: 2;
 }
 
 .soundboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
     margin-top: 2rem;
 }
 
@@ -283,7 +286,7 @@ main {
 
 .sound-name {
     font-weight: bold;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
     color: #ffaa00;
     text-shadow: 
         0 0 5px #ff6600,
@@ -324,7 +327,6 @@ main {
     display: flex;
 }
 
-/* Bouton STOP INDIVIDUEL sous chaque sound-btn */
 .stop-btn {
     background: linear-gradient(145deg, #4a0000, #660000);
     border: 2px solid #ff0000;
@@ -334,7 +336,7 @@ main {
     border-radius: 50%;
     cursor: pointer;
     font-size: 1.2rem;
-    display: none; /* Caché par défaut */
+    display: none;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
@@ -371,7 +373,6 @@ main {
         inset 0 0 15px rgba(255, 0, 0, 0.4);
 }
 
-/* Visible seulement quand SON bouton joue */
 .sound-btn.playing + .stop-btn,
 .sound-btn.playing ~ .stop-btn {
     display: flex;
@@ -406,12 +407,13 @@ main {
     left: 50%;
     transform: translate(-50%, -50%);
     background: linear-gradient(145deg, #1a0000, #330000);
-    padding: 2.5rem;
+    padding: 2rem;
     border-radius: 15px;
     box-shadow: 
         0 0 50px rgba(255, 51, 0, 0.6),
         inset 0 0 30px rgba(255, 0, 0, 0.2);
-    min-width: 350px;
+    width: 90%;
+    max-width: 350px;
     border: 2px solid #ff3300;
 }
 
@@ -419,7 +421,7 @@ main {
     color: #ffaa00;
     margin-bottom: 1.5rem;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
     text-transform: uppercase;
     letter-spacing: 2px;
     text-shadow: 
@@ -429,13 +431,13 @@ main {
 
 .modal-content input {
     width: 100%;
-    padding: 1rem;
+    padding: 0.8rem;
     border: 2px solid #ff6600;
     border-radius: 8px;
     background: linear-gradient(145deg, #0a0a0a, #1a0000);
     color: #ffaa00;
     font-family: 'Courier New', monospace;
-    font-size: 1.1rem;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
     font-weight: bold;
     text-align: center;
     box-shadow: 
@@ -523,19 +525,35 @@ main {
 }
 
 @media (max-width: 768px) {
-    .header-content {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
+    .header-content h1 {
+        font-size: clamp(1rem, 3.5vw, 1.5rem);
     }
     
-    .header-content h1 {
-        font-size: 1.3rem;
+    .header-buttons {
+        gap: 0.5rem;
+    }
+    
+    .theme-btn, .fullscreen-btn, .timer-btn, .volume-btn, .random-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .volume-display {
+        font-size: 0.9rem;
+        min-width: 55px;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .volume-display[data-volume="100"] {
+        font-size: 0.8rem;
+        min-width: 50px;
+        padding: 0.3rem 0.6rem;
     }
     
     .soundboard-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 0.8rem;
     }
     
     .sound-btn {
@@ -543,7 +561,7 @@ main {
     }
     
     .sound-name {
-        font-size: 0.9rem;
+        font-size: clamp(0.8rem, 2vw, 0.9rem);
     }
     
     .stop-btn {
@@ -553,7 +571,63 @@ main {
     }
     
     .modal-content {
-        min-width: 300px;
-        padding: 2rem;
+        padding: 1.5rem;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-content {
+        padding: 0 0.5rem;
+    }
+    
+    .header-content h1 {
+        font-size: clamp(0.9rem, 3vw, 1.2rem);
+    }
+    
+    .header-buttons {
+        gap: 0.4rem;
+    }
+    
+    .theme-btn, .fullscreen-btn, .timer-btn, .volume-btn, .random-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+    
+    .volume-display {
+        font-size: 0.8rem;
+        min-width: 50px;
+        padding: 0.2rem 0.5rem;
+    }
+    
+    .volume-display[data-volume="100"] {
+        font-size: 0.7rem;
+        min-width: 45px;
+        padding: 0.2rem 0.5rem;
+    }
+    
+    .soundboard-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 0.6rem;
+    }
+    
+    .sound-btn {
+        padding: 0.8rem 0.6rem;
+    }
+    
+    .sound-name {
+        font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+    }
+    
+    .stop-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+    
+    .modal-content {
+        padding: 1.2rem;
+        max-width: 260px;
     }
 }

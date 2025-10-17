@@ -4,7 +4,7 @@ class Soundboard {
         this.volume = 0.7;
         this.fullscreen = false;
         this.currentAudio = null;
-        this.currentPlayingBtn = null; // Pour tracker le bouton en cours
+        this.currentPlayingBtn = null;
         this.isDarkMode = false;
         this.init();
     }
@@ -60,7 +60,6 @@ class Soundboard {
         container.innerHTML = '';
 
         this.sounds.forEach(sound => {
-            // Container pour sound-btn + stop-btn
             const soundContainer = document.createElement('div');
             soundContainer.className = 'sound-container';
             
@@ -72,14 +71,12 @@ class Soundboard {
                 <div class="sound-name">${sound.customName}</div>
             `;
             
-            // Bouton STOP individuel
             const stopBtn = document.createElement('button');
             stopBtn.className = 'stop-btn';
             stopBtn.dataset.soundId = sound.id;
             stopBtn.innerHTML = '⏹️';
             stopBtn.title = `Arrêter ${sound.customName}`;
             
-            // Événement clic sur sound-btn (play)
             soundBtn.addEventListener('click', (e) => {
                 if (!e.target.classList.contains('rename-icon')) {
                     console.log('🎵 Clic sur:', sound.customName);
@@ -87,13 +84,11 @@ class Soundboard {
                 }
             });
             
-            // Événement clic sur rename
             soundBtn.querySelector('.rename-icon').addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.openRenameModal(sound);
             });
             
-            // Événement clic sur stop-btn
             stopBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 console.log('⏹️ STOP individuel:', sound.customName);
@@ -115,7 +110,7 @@ class Soundboard {
             const audio = new Audio(`assets/sound/${sound.filename}`);
             audio.volume = this.volume;
             this.currentAudio = audio;
-            this.currentPlayingBtn = btn; // Tracker le bouton
+            this.currentPlayingBtn = btn;
             
             console.log('🎬 Ajout classe playing');
             btn.classList.add('playing');
@@ -156,13 +151,11 @@ class Soundboard {
             console.log('🔇 Audio arrêté');
         }
         
-        // Retirer classe playing du bouton actuel
         if (this.currentPlayingBtn) {
             this.currentPlayingBtn.classList.remove('playing');
             this.currentPlayingBtn = null;
         }
         
-        // Retirer classe playing de tous les autres boutons
         document.querySelectorAll('.sound-btn').forEach(b => {
             b.classList.remove('playing');
         });
@@ -229,7 +222,11 @@ class Soundboard {
         document.getElementById('fullscreenBtn').addEventListener('click', () => this.toggleFullscreen());
         
         document.getElementById('timerBtn').addEventListener('click', () => {
-            window.open('timer.html', '_blank', 'width=500,height=700');
+            window.open('timer.html', '_blank');
+        });
+
+        document.getElementById('randomBtn').addEventListener('click', () => {
+            window.open('ramdom.html', '_blank');
         });
 
         document.addEventListener('fullscreenchange', () => {

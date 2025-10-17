@@ -37,6 +37,19 @@ class TimerApp {
         document.getElementById('startTimer').addEventListener('click', () => this.toggleTimer());
         document.getElementById('stopTimer').addEventListener('click', () => this.stopTimer());
         document.getElementById('resetTimer').addEventListener('click', () => this.resetTimer());
+
+        // Fullscreen and Home button functionality
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(e => console.error('Erreur plein écran:', e));
+            } else {
+                document.exitFullscreen().catch(e => console.error('Erreur sortie plein écran:', e));
+            }
+        });
+
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
     }
 
     toggleChrono() {
@@ -152,7 +165,7 @@ class TimerApp {
         document.getElementById('timerDisplay').textContent = timerDisplay;
 
         const display = document.getElementById('timerDisplay');
-        display.style.color = this.timerTime <= 10 && this.timerTime > 0 ? '#ff4444' : 'white';
+        display.style.color = this.timerTime <= 10 && this.timerTime > 0 ? '#ff4444' : '#ffaa00';
     }
 }
 
