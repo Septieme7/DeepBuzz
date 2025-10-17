@@ -182,6 +182,7 @@ projet/
 2. **Ajouter**                      vos fichiers audio dans `/assets/sound/`
 3. **Nommer**                       les fichiers : `sound1.mp3` à `sound30.mp3`
 4. **Ouvrir**                       `index.html` dans un navigateur
+5. **Stop**                         Bouton Stop.
 
 ---
 
@@ -231,5 +232,31 @@ In the next time...
 - [ ] Support multi-langues
 
 ---
+
+A rajouter
+
+un selecteur aléatoire de nom, 20 au total avec (environ 4,76% chacun pour 21 sections).
+
+Dorian Abbadessa
+Habib Akerim
+Ben Astier
+Alex bachir
+Salah Belhassan
+Yannick Bossola
+Eric Bouchut
+Ines Charfi
+Eva Daumas
+Philippe Durand
+Enzo Gavani
+Laurene Gigan
+Ximenia Hagard
+Alexandre Imbernon
+Alexandre Meric
+Justin Mogrovejo
+Bilal Nouar
+Thomas Robert
+Anthonin Tacchi
+Théo Viti
+
 
 **🎮🔥**

@@ -1,9 +1,11 @@
 class Soundboard {
     constructor() {
         this.sounds = [];
-        this.volume = 0.7; // Volume par défaut à 70%
+        this.volume = 0.7;
         this.fullscreen = false;
         this.currentAudio = null;
+        this.currentPlayingBtn = null; // Pour tracker le bouton en cours
+        this.isDarkMode = false;
         this.init();
     }
 
@@ -12,10 +14,11 @@ class Soundboard {
         this.bindEvents();
         this.loadVolume();
         this.updateVolumeDisplay();
+        this.applyTheme();
+        console.log('✅ Soundboard initialisé');
     }
 
     loadSounds() {
-        // Soundboard prête pour 30 sons (ajoute tes fichiers audio dans assets/sound/)
         const defaultSounds = [
             'sound1.mp3', 'sound2.mp3', 'sound3.mp3', 'sound4.mp3', 'sound5.mp3',
             'sound6.mp3', 'sound7.mp3', 'sound8.mp3', 'sound9.mp3', 'sound10.mp3',
@@ -36,6 +39,7 @@ class Soundboard {
         });
 
         this.renderSoundboard();
+        console.log(`🎵 ${this.sounds.length} sons chargés`);
     }
 
     getSoundName(filename) {
@@ -44,8 +48,7 @@ class Soundboard {
 
     getStoredName(id) {
         try {
-            const storedName = localStorage.getItem(`sound_${id}_name`);
-            return storedName;
+            return localStorage.getItem(`sound_${id}_name`);
         } catch (e) {
             console.warn('localStorage non disponible');
             return null;
@@ -57,6 +60,10 @@ class Soundboard {
         container.innerHTML = '';
 
         this.sounds.forEach(sound => {
+            // Container pour sound-btn + stop-btn
+            const soundContainer = document.createElement('div');
+            soundContainer.className = 'sound-container';
+            
             const soundBtn = document.createElement('div');
             soundBtn.className = 'sound-btn';
             soundBtn.dataset.soundId = sound.id;
@@ -65,54 +72,109 @@ class Soundboard {
                 <div class="sound-name">${sound.customName}</div>
             `;
             
+            // Bouton STOP individuel
+            const stopBtn = document.createElement('button');
+            stopBtn.className = 'stop-btn';
+            stopBtn.dataset.soundId = sound.id;
+            stopBtn.innerHTML = '⏹️';
+            stopBtn.title = `Arrêter ${sound.customName}`;
+            
+            // Événement clic sur sound-btn (play)
             soundBtn.addEventListener('click', (e) => {
                 if (!e.target.classList.contains('rename-icon')) {
-                    this.playSound(sound, soundBtn);
+                    console.log('🎵 Clic sur:', sound.customName);
+                    this.playSound(sound, soundBtn, stopBtn);
                 }
             });
             
+            // Événement clic sur rename
             soundBtn.querySelector('.rename-icon').addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.openRenameModal(sound);
             });
+            
+            // Événement clic sur stop-btn
+            stopBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                console.log('⏹️ STOP individuel:', sound.customName);
+                this.stopSound(sound, soundBtn, stopBtn);
+            });
 
-            container.appendChild(soundBtn);
+            soundContainer.appendChild(soundBtn);
+            soundContainer.appendChild(stopBtn);
+            container.appendChild(soundContainer);
         });
     }
 
-    async playSound(sound, btn) {
+    async playSound(sound, btn, stopBtn) {
         try {
-            // Arrêter le son précédent s'il existe
-            if (this.currentAudio) {
-                this.currentAudio.pause();
-                this.currentAudio = null;
-                // Retirer la classe playing de tous les boutons
-                document.querySelectorAll('.sound-btn').forEach(b => b.classList.remove('playing'));
-            }
+            console.log('⏹️ Arrêt sons précédents');
+            this.stopAllSounds();
 
+            console.log('🔊 Création audio:', sound.filename);
             const audio = new Audio(`assets/sound/${sound.filename}`);
             audio.volume = this.volume;
             this.currentAudio = audio;
+            this.currentPlayingBtn = btn; // Tracker le bouton
             
+            console.log('🎬 Ajout classe playing');
             btn.classList.add('playing');
             
+            console.log('▶️ Lecture...');
             await audio.play();
+            console.log(`✅ Lecture OK: ${sound.customName}`);
             
             audio.addEventListener('ended', () => {
-                btn.classList.remove('playing');
-                this.currentAudio = null;
+                console.log('🏁 Son terminé');
+                this.cleanupAudio(btn);
             });
             
-            audio.addEventListener('error', () => {
-                btn.classList.remove('playing');
-                this.currentAudio = null;
-                alert('Erreur de lecture du son');
+            audio.addEventListener('error', (e) => {
+                console.error('❌ Erreur audio:', e);
+                this.cleanupAudio(btn);
+                alert('Erreur de lecture du son - Vérifiez que le fichier existe dans assets/sound/');
             });
+
         } catch (error) {
-            console.error('Erreur lecture:', error);
-            btn.classList.remove('playing');
-            this.currentAudio = null;
+            console.error('❌ Erreur play:', error);
+            this.cleanupAudio(btn);
+            alert('Erreur lors de la lecture');
         }
+    }
+
+    stopSound(sound, btn, stopBtn) {
+        console.log('⏹️ STOP individuel demandé');
+        this.stopAllSounds();
+    }
+
+    stopAllSounds() {
+        console.log('⏹️ STOP global');
+        if (this.currentAudio) {
+            this.currentAudio.pause();
+            this.currentAudio.currentTime = 0;
+            this.currentAudio = null;
+            console.log('🔇 Audio arrêté');
+        }
+        
+        // Retirer classe playing du bouton actuel
+        if (this.currentPlayingBtn) {
+            this.currentPlayingBtn.classList.remove('playing');
+            this.currentPlayingBtn = null;
+        }
+        
+        // Retirer classe playing de tous les autres boutons
+        document.querySelectorAll('.sound-btn').forEach(b => {
+            b.classList.remove('playing');
+        });
+        
+        console.log('✅ Nettoyage terminé');
+    }
+
+    cleanupAudio(btn) {
+        this.currentAudio = null;
+        btn.classList.remove('playing');
+        this.currentPlayingBtn = null;
+        console.log('🧹 Cleanup OK');
     }
 
     openRenameModal(sound) {
@@ -124,7 +186,6 @@ class Soundboard {
         input.focus();
         input.select();
 
-        // Fonction pour confirmer
         const confirmAction = () => {
             const newName = input.value.trim();
             if (newName) {
@@ -135,76 +196,58 @@ class Soundboard {
                     console.warn('localStorage non disponible');
                 }
                 this.renderSoundboard();
+                console.log('✏️ Nom changé:', newName);
             }
             modal.style.display = 'none';
         };
 
-        // Bouton confirmer
-        const confirmBtn = document.getElementById('confirmRename');
-        confirmBtn.onclick = confirmAction;
-
-        // Touche Entrée
-        input.onkeypress = (e) => {
-            if (e.key === 'Enter') {
-                confirmAction();
-            }
-        };
-
-        // Bouton annuler
-        document.getElementById('cancelRename').onclick = () => {
-            modal.style.display = 'none';
-        };
-
-        // Clic en dehors de la modal
-        modal.onclick = (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-            }
-        };
-
-        // Touche Échap
-        document.onkeydown = (e) => {
+        document.getElementById('confirmRename').onclick = confirmAction;
+        input.onkeypress = (e) => { if (e.key === 'Enter') confirmAction(); };
+        document.getElementById('cancelRename').onclick = () => { modal.style.display = 'none'; };
+        
+        modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+        
+        const escapeHandler = (e) => { 
             if (e.key === 'Escape' && modal.style.display === 'block') {
                 modal.style.display = 'none';
+                document.removeEventListener('keydown', escapeHandler);
             }
         };
+        document.addEventListener('keydown', escapeHandler);
     }
 
     bindEvents() {
-        // Boutons de volume
         document.getElementById('volumeUp').addEventListener('click', () => {
             this.changeVolume(0.1);
+            console.log('🔊 Volume +10%');
         });
-
         document.getElementById('volumeDown').addEventListener('click', () => {
             this.changeVolume(-0.1);
+            console.log('🔉 Volume -10%');
         });
 
-        // Plein écran
-        document.getElementById('fullscreenBtn').addEventListener('click', () => {
-            this.toggleFullscreen();
-        });
-
-        // Chronomètre - ouvre timer.html dans une nouvelle fenêtre
+        document.getElementById('fullscreenBtn').addEventListener('click', () => this.toggleFullscreen());
+        
         document.getElementById('timerBtn').addEventListener('click', () => {
             window.open('timer.html', '_blank', 'width=500,height=700');
         });
 
-        // Écouter les changements de visibilité pour le plein écran
         document.addEventListener('fullscreenchange', () => {
             this.fullscreen = !!document.fullscreenElement;
             this.updateFullscreenButton();
         });
+
+        const themeBtn = document.getElementById('themeToggle');
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => this.toggleTheme());
+        }
+
+        console.log('🔗 Événements liés');
     }
 
     changeVolume(delta) {
         this.volume = Math.max(0, Math.min(1, this.volume + delta));
-        
-        // Mettre à jour le volume du son en cours
-        if (this.currentAudio) {
-            this.currentAudio.volume = this.volume;
-        }
-        
+        if (this.currentAudio) this.currentAudio.volume = this.volume;
         this.updateVolumeDisplay();
         this.saveVolume();
     }
@@ -213,8 +256,8 @@ class Soundboard {
         const display = document.getElementById('volumeDisplay');
         const percentage = Math.round(this.volume * 100);
         display.textContent = `${percentage}%`;
+        display.dataset.volume = percentage;
         
-        // Effet visuel selon le volume
         if (percentage <= 20) {
             display.style.color = '#ff0000';
             display.style.borderColor = '#ff0000';
@@ -228,48 +271,53 @@ class Soundboard {
     }
 
     saveVolume() {
-        try {
-            localStorage.setItem('soundboardVolume', this.volume);
-        } catch (e) {
-            console.warn('localStorage non disponible');
-        }
+        try { localStorage.setItem('soundboardVolume', this.volume); } catch (e) {}
     }
 
     loadVolume() {
         try {
-            const savedVolume = localStorage.getItem('soundboardVolume');
-            if (savedVolume !== null) {
-                this.volume = parseFloat(savedVolume);
+            const saved = localStorage.getItem('soundboardVolume');
+            if (saved !== null) {
+                this.volume = parseFloat(saved);
+                this.updateVolumeDisplay();
             }
-        } catch (e) {
-            console.warn('localStorage non disponible');
+        } catch (e) {}
+    }
+
+    toggleTheme() {
+        this.isDarkMode = !this.isDarkMode;
+        document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
+        const themeBtn = document.getElementById('themeToggle');
+        if (themeBtn) themeBtn.textContent = this.isDarkMode ? '☀️' : '🌙';
+        localStorage.setItem('darkMode', this.isDarkMode);
+    }
+
+    applyTheme() {
+        const saved = localStorage.getItem('darkMode');
+        if (saved === 'true') {
+            this.isDarkMode = true;
+            document.documentElement.setAttribute('data-theme', 'dark');
+            const themeBtn = document.getElementById('themeToggle');
+            if (themeBtn) themeBtn.textContent = '☀️';
         }
     }
 
     async toggleFullscreen() {
         if (!this.fullscreen) {
-            try {
-                await document.documentElement.requestFullscreen();
-            } catch (error) {
-                console.error('Erreur fullscreen:', error);
-            }
+            try { await document.documentElement.requestFullscreen(); } catch (e) {}
         } else {
-            try {
-                await document.exitFullscreen();
-            } catch (error) {
-                console.error('Erreur sortie fullscreen:', error);
-            }
+            try { await document.exitFullscreen(); } catch (e) {}
         }
         this.updateFullscreenButton();
     }
 
     updateFullscreenButton() {
         const btn = document.getElementById('fullscreenBtn');
-        btn.textContent = this.fullscreen ? '❌' : '⛶';
+        if (btn) btn.textContent = this.fullscreen ? '❌' : '⛶';
     }
 }
 
-// Initialisation
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 DOM chargé');
     new Soundboard();
 });

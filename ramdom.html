@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roue du hasard</title>
+    <link rel="stylesheet" href="/assets/css/ramdom.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Roue du ZaZard</h1>
+
+        <div class="wheel-container">
+            <!-- Flèche inversée (180°) -->
+            <div class="arrow"></div>
+
+            <canvas id="wheelCanvas" width="600" height="600"></canvas>
+            <button id="spinBtn" class="spin-button">LANCER LA ROUE</button>
+        </div>
+
+        <div class="resultat">
+            <div id="winner" class="winner-display"></div>
+        </div>
+    </div>
+
+    <script src="/assets/js/ramdom.js"></script>
+</body>
+</html>
