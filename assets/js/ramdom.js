@@ -226,7 +226,6 @@ function tirerIndexPondere() {
     return nomsAvecPoids.length - 1;
 }
 
-
 function spin() {
     if (isSpinning) return;
     isSpinning = true;
@@ -241,11 +240,10 @@ function spin() {
     const winningIndex = tirerIndexPondere();
     const angleParSegment = (2 * Math.PI) / noms.length;
 
-
     // Flèche à gauche (angle 0) = rotation négative pour amener le segment à 0
     const targetRotation = -((winningIndex * angleParSegment) + angleParSegment / 2);
 
-    const spins = 5 + Math.random() * 3;//pas reussit
+    const spins = 5 + Math.random() * 3;
     const finalRotation = spins * 2 * Math.PI + targetRotation;
     const duration = 5000 + Math.random() * 2000;
     const start = performance.now();
@@ -354,3 +352,27 @@ document.addEventListener('keydown', (e) => {
 
 // Redimensionnement responsive
 window.addEventListener('resize', () => drawWheel());
+
+// Gestion de l'affichage de l'image wp.jpg toutes les 5 minutes
+const popupImage = document.getElementById('popupImage');
+const wheelContainer = document.querySelector('.wheel-container');
+
+function showPopupImage() {
+    // Masquer la roue
+    wheelContainer.classList.add('hidden');
+    
+    // Afficher l'image
+    popupImage.classList.add('show');
+
+    // Réafficher la roue après 3 secondes
+    setTimeout(() => {
+        popupImage.classList.remove('show');
+        wheelContainer.classList.remove('hidden');
+    }, 3000); // 3 secondes
+}
+
+// Afficher l'image toutes les 5 minutes (300 000 ms)
+setInterval(showPopupImage, 300000);
+
+// Optionnel : Afficher l'image immédiatement au chargement pour tester
+// showPopupImage();
